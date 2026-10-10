@@ -1,0 +1,1495 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CarePulse AI — Human-Centered Elderly Care & Remote Health Monitoring</title>
+  <meta name="description" content="A human-centered, accessible healthcare dashboard prototype designed for elderly users and caregivers with modern Bento Grid layouts.">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <!-- Accessible skip navigation link -->
+  <a href="#main-content" class="skip-link">Skip to main content</a>
+
+  <!-- Mobile Sidebar Backdrop -->
+  <div class="sidebar-backdrop" id="sidebarBackdrop"></div>
+
+  <div class="app-layout">
+    <!-- ====================================================================
+         ACCESSIBLE SIDEBAR NAVIGATION (Desktop & Mobile Drawer)
+         ==================================================================== -->
+    <aside class="sidebar" id="sidebarNav" aria-label="Main Navigation">
+      <div class="brand-section">
+        <div class="brand-icon-box" aria-hidden="true">🌱</div>
+        <div>
+          <h1 class="brand-title">CarePulse</h1>
+          <span class="brand-subtitle">AI Care & Health</span>
+        </div>
+      </div>
+
+      <nav>
+        <ul class="nav-menu" role="menubar">
+          <li role="none">
+            <button class="nav-link active" data-view="dashboard" role="menuitem" aria-current="page">
+              <span class="nav-icon" aria-hidden="true">🏠</span>
+              <span>Dashboard</span>
+            </button>
+          </li>
+          <li role="none">
+            <button class="nav-link" data-view="health" role="menuitem">
+              <span class="nav-icon" aria-hidden="true">❤️</span>
+              <span>Health</span>
+            </button>
+          </li>
+          <li role="none">
+            <button class="nav-link" data-view="medications" role="menuitem">
+              <span class="nav-icon" aria-hidden="true">💊</span>
+              <span>Medications</span>
+            </button>
+          </li>
+          <li role="none">
+            <button class="nav-link" data-view="appointments" role="menuitem">
+              <span class="nav-icon" aria-hidden="true">📅</span>
+              <span>Appointments</span>
+            </button>
+          </li>
+          <li role="none">
+            <button class="nav-link" data-view="analysis" role="menuitem">
+              <span class="nav-icon" aria-hidden="true">📊</span>
+              <span>Analysis</span>
+            </button>
+          </li>
+          <li role="none">
+            <button class="nav-link disabled-link" data-view="ai-assistant" role="menuitem" disabled aria-disabled="true" title="AI Assistant is disabled for this phase">
+              <span class="nav-icon" aria-hidden="true">🤖</span>
+              <span>AI Assistant</span>
+              <span class="disabled-pill">Disabled</span>
+            </button>
+          </li>
+          <li role="none">
+            <button class="nav-link emergency-nav" data-view="emergency" role="menuitem">
+              <span class="nav-icon" aria-hidden="true">🆘</span>
+              <span>Emergency</span>
+            </button>
+          </li>
+          <li role="none">
+            <button class="nav-link" data-view="settings" role="menuitem">
+              <span class="nav-icon" aria-hidden="true">⚙️</span>
+              <span>Settings</span>
+            </button>
+          </li>
+        </ul>
+      </nav>
+
+      <!-- Role Switcher (Elderly Mode <-> Caregiver Dashboard) -->
+      <div class="sidebar-footer">
+        <div class="mode-switch-card">
+          <div class="mode-badge">
+            <span aria-hidden="true">👤</span>
+            <span id="currentRoleLabel">Active: Meera (Senior)</span>
+          </div>
+          <button class="mode-btn" id="roleToggleBtn" aria-label="Switch to caregiver mode">
+            <span>⇄ Switch to Caregiver View</span>
+          </button>
+        </div>
+      </div>
+    </aside>
+
+    <!-- ====================================================================
+         MAIN CONTENT AREA
+         ==================================================================== -->
+    <main class="main-wrapper" id="main-content">
+      <!-- Top Accessible Header -->
+      <header class="top-header">
+        <button class="mobile-menu-toggle" id="mobileMenuBtn" aria-label="Open navigation menu">
+          ☰
+        </button>
+
+        <div class="header-greeting-wrap">
+          <span class="header-date" id="currentDateDisplay">Wednesday, September 23</span>
+          <h2 class="header-greeting" id="greetingUserDisplay">Good morning, Meera 👋</h2>
+        </div>
+
+        <div class="header-actions">
+          <!-- Quick Accessibility Text Size Adjuster -->
+          <div class="a11y-pill-group" role="group" aria-label="Text size control">
+            <span class="a11y-label">Text:</span>
+            <button class="a11y-size-btn active" data-size="1" aria-label="Default text size">A</button>
+            <button class="a11y-size-btn" data-size="1.15" aria-label="Large text size">A+</button>
+            <button class="a11y-size-btn" data-size="1.3" aria-label="Extra large text size">A++</button>
+          </div>
+
+          <!-- Notification Bell -->
+          <button class="header-icon-btn" id="notifBellBtn" aria-label="Notifications, 3 new alerts" aria-expanded="false">
+            <span aria-hidden="true">🔔</span>
+            <span class="notification-badge" id="notifBadgeCount">3</span>
+          </button>
+
+          <!-- User Profile Badge -->
+          <div class="user-profile-badge" tabindex="0" role="button" aria-label="User profile: Meera Patel, 72 years old">
+            <div class="profile-avatar">M</div>
+            <span class="profile-name">Meera Patel</span>
+          </div>
+        </div>
+      </header>
+
+      <!-- Dropdown Notification Center -->
+      <div class="notifications-panel" id="notificationsPanel" role="region" aria-label="Notifications panel">
+        <div class="notif-panel-header">
+          <h3 class="notif-panel-title">Notifications</h3>
+          <button class="a11y-size-btn" id="clearNotifsBtn">Clear</button>
+        </div>
+        <div class="alerts-list">
+          <div class="alert-item urgent">
+            <span class="alert-icon" aria-hidden="true">💊</span>
+            <div>
+              <div class="alert-title">Medication Reminder</div>
+              <div class="alert-desc">Afternoon multivitamin due at 1:00 PM.</div>
+            </div>
+          </div>
+          <div class="alert-item">
+            <span class="alert-icon" aria-hidden="true">📅</span>
+            <div>
+              <div class="alert-title">Upcoming Appointment</div>
+              <div class="alert-desc">Check-up with Dr. Sharma tomorrow at 10:30 AM.</div>
+            </div>
+          </div>
+          <div class="alert-item message">
+            <span class="alert-icon" aria-hidden="true">💬</span>
+            <div>
+              <div class="alert-title">Message from Rahul (Son)</div>
+              <div class="alert-desc">"Hi Mom, I will come by at 5:00 PM today!"</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ================================================================
+           VIEW 1: ELDERLY DASHBOARD (Bento Grid)
+           ================================================================ -->
+      <section class="view-container view-section active-view" id="dashboard-view" aria-labelledby="dashboard-heading">
+        <div class="view-header">
+          <h2 class="view-title" id="dashboard-heading">Today's Overview</h2>
+          <p class="view-subtitle">A simple, clear summary of your health, medicines, and plans for today.</p>
+        </div>
+
+        <div class="bento-grid">
+          <!-- ------------------------------------------------------------
+               BENTO CARD 1: HEALTH OVERVIEW (Large Bento Card - 7 Spans)
+               ------------------------------------------------------------ -->
+          <article class="bento-card span-7" aria-labelledby="card-health-title">
+            <div>
+              <div class="card-header-row">
+                <div class="card-title-group">
+                  <span class="card-header-icon" aria-hidden="true">🩺</span>
+                  <h3 class="card-title" id="card-health-title">Health Overview</h3>
+                </div>
+                <div class="status-badge good">
+                  <span class="badge-dot"></span>
+                  <span>Overall status: Good</span>
+                </div>
+              </div>
+
+              <!-- 4 Vital Health Metrics Grid -->
+              <div class="vitals-grid">
+                <!-- Heart Rate -->
+                <div class="vital-box">
+                  <div class="vital-header">
+                    <span class="vital-emoji" aria-hidden="true">❤️</span>
+                    <span class="vital-label">Heart Rate</span>
+                  </div>
+                  <div class="vital-value-wrap">
+                    <span class="vital-value" id="valHeartRate">72</span>
+                    <span class="vital-unit">bpm</span>
+                  </div>
+                  <span class="vital-state">✓ Normal (60–100)</span>
+                </div>
+
+                <!-- Blood Pressure -->
+                <div class="vital-box">
+                  <div class="vital-header">
+                    <span class="vital-emoji" aria-hidden="true">🩸</span>
+                    <span class="vital-label">Blood Pressure</span>
+                  </div>
+                  <div class="vital-value-wrap">
+                    <span class="vital-value" id="valBloodPressure">120/80</span>
+                    <span class="vital-unit">mmHg</span>
+                  </div>
+                  <span class="vital-state">✓ Optimal range</span>
+                </div>
+
+                <!-- SpO2 -->
+                <div class="vital-box">
+                  <div class="vital-header">
+                    <span class="vital-emoji" aria-hidden="true">🫁</span>
+                    <span class="vital-label">SpO₂ Oxygen</span>
+                  </div>
+                  <div class="vital-value-wrap">
+                    <span class="vital-value" id="valSpO2">98</span>
+                    <span class="vital-unit">%</span>
+                  </div>
+                  <span class="vital-state">✓ Healthy saturation</span>
+                </div>
+
+                <!-- Temperature -->
+                <div class="vital-box">
+                  <div class="vital-header">
+                    <span class="vital-emoji" aria-hidden="true">🌡</span>
+                    <span class="vital-label">Temperature</span>
+                  </div>
+                  <div class="vital-value-wrap">
+                    <span class="vital-value" id="valTemp">98.4</span>
+                    <span class="vital-unit">°F</span>
+                  </div>
+                  <span class="vital-state">✓ Normal temperature</span>
+                </div>
+              </div>
+            </div>
+
+            <div class="card-footer-note">
+              <span>Synced with wrist sensor 15 mins ago.</span>
+              <span style="font-weight: 600;">Mock health values for research prototype.</span>
+            </div>
+          </article>
+
+          <!-- ------------------------------------------------------------
+               BENTO CARD 2: DAILY CHECK-IN (Interactive - 5 Spans)
+               ------------------------------------------------------------ -->
+          <article class="bento-card span-5" aria-labelledby="card-checkin-title">
+            <div>
+              <div class="card-header-row">
+                <div class="card-title-group">
+                  <span class="card-header-icon" aria-hidden="true">🌻</span>
+                  <h3 class="card-title" id="card-checkin-title">Daily Check-In</h3>
+                </div>
+                <div class="status-badge info" id="checkinStatusBadge">
+                  <span class="badge-dot"></span>
+                  <span>Today's status</span>
+                </div>
+              </div>
+
+              <p class="checkin-prompt">How are you feeling right now?</p>
+
+              <div class="feelings-buttons-group" role="group" aria-label="Daily feeling selection">
+                <button class="feeling-btn" data-feeling="good" aria-pressed="false">
+                  <span class="feeling-emoji" aria-hidden="true">😊</span>
+                  <span>Feeling good</span>
+                </button>
+
+                <button class="feeling-btn" data-feeling="okay" aria-pressed="false">
+                  <span class="feeling-emoji" aria-hidden="true">😐</span>
+                  <span>Feeling okay</span>
+                </button>
+
+                <button class="feeling-btn" data-feeling="unwell" aria-pressed="false">
+                  <span class="feeling-emoji" aria-hidden="true">😟</span>
+                  <span>Not feeling well</span>
+                </button>
+              </div>
+
+              <!-- Interactive Confirmation Feedback -->
+              <div class="checkin-feedback-box" id="checkinFeedback">
+                <span aria-hidden="true">✓</span>
+                <span id="checkinFeedbackText">Thank you! Your response has been recorded.</span>
+              </div>
+            </div>
+
+            <div class="card-footer-note" style="margin-top: 14px;">
+              <span>Your caregiver Rahul is informed of your daily check-in.</span>
+            </div>
+          </article>
+
+          <!-- ------------------------------------------------------------
+               BENTO CARD 3: TODAY'S MEDICATION (6 Spans)
+               ------------------------------------------------------------ -->
+          <article class="bento-card span-6" aria-labelledby="card-med-title">
+            <div>
+              <div class="card-header-row">
+                <div class="card-title-group">
+                  <span class="card-header-icon" aria-hidden="true">💊</span>
+                  <h3 class="card-title" id="card-med-title">Today's Medication</h3>
+                </div>
+                <button class="a11y-size-btn" style="text-decoration: underline;" data-view="medications">
+                  Full Schedule →
+                </button>
+              </div>
+
+              <div class="med-list" id="dashboardMedList">
+                <!-- Morning Medicine (Taken) -->
+                <div class="med-item">
+                  <div class="med-info">
+                    <div class="med-icon-box" aria-hidden="true">☀️</div>
+                    <div>
+                      <div class="med-name">Amlodipine (Blood Pressure)</div>
+                      <div class="med-meta">5 mg · Morning 8:00 AM · With breakfast</div>
+                    </div>
+                  </div>
+                  <button class="med-action-btn taken" data-med-id="med-1" aria-label="Amlodipine taken at 8:00 AM">
+                    ✓ Taken
+                  </button>
+                </div>
+
+                <!-- Afternoon Medicine (Pending) -->
+                <div class="med-item">
+                  <div class="med-info">
+                    <div class="med-icon-box" aria-hidden="true">🍽️</div>
+                    <div>
+                      <div class="med-name">Multivitamin & Calcium</div>
+                      <div class="med-meta">1 Tablet · Afternoon 1:00 PM · After lunch</div>
+                    </div>
+                  </div>
+                  <button class="med-action-btn" data-med-id="med-2" aria-label="Mark Multivitamin as taken">
+                    Mark as taken
+                  </button>
+                </div>
+
+                <!-- Evening Medicine (Upcoming) -->
+                <div class="med-item">
+                  <div class="med-info">
+                    <div class="med-icon-box" aria-hidden="true">🌙</div>
+                    <div>
+                      <div class="med-name">Metformin (Glucose Control)</div>
+                      <div class="med-meta">500 mg · Evening 8:00 PM · With dinner</div>
+                    </div>
+                  </div>
+                  <button class="med-action-btn" data-med-id="med-3" aria-label="Mark Metformin as taken">
+                    Mark as taken
+                  </button>
+                </div>
+              </div>
+            </div>
+
+            <div class="card-footer-note">
+              <span>Next scheduled dose: <strong>Multivitamin at 1:00 PM</strong></span>
+            </div>
+          </article>
+
+          <!-- ------------------------------------------------------------
+               BENTO CARD 4: NEXT APPOINTMENT (6 Spans)
+               ------------------------------------------------------------ -->
+          <article class="bento-card span-6" aria-labelledby="card-appt-title">
+            <div>
+              <div class="card-header-row">
+                <div class="card-title-group">
+                  <span class="card-header-icon" aria-hidden="true">📅</span>
+                  <h3 class="card-title" id="card-appt-title">Next Appointment</h3>
+                </div>
+                <div class="status-badge info">
+                  <span class="badge-dot"></span>
+                  <span>Tomorrow</span>
+                </div>
+              </div>
+
+              <div class="appointment-detail-box">
+                <div class="doctor-profile-row">
+                  <div class="doctor-avatar" aria-hidden="true">👨‍⚕️</div>
+                  <div>
+                    <h4 class="doctor-name">Dr. Sharma</h4>
+                    <p class="doctor-spec">Senior Geriatrician · General Check-up</p>
+                  </div>
+                </div>
+
+                <div class="appt-time-pill">
+                  <span aria-hidden="true">⏰</span>
+                  <span>Tomorrow (Thursday) · 10:30 AM</span>
+                </div>
+
+                <p style="font-size: 0.95rem; color: var(--text-secondary);">
+                  📍 <strong>Wellness Family Health Clinic</strong> (Room 204) or Video Telehealth available.
+                </p>
+              </div>
+
+              <button class="btn-secondary" data-view="appointments" aria-label="View appointment details with Dr. Sharma">
+                <span>View appointment details</span>
+                <span aria-hidden="true">→</span>
+              </button>
+            </div>
+
+            <div class="card-footer-note" style="margin-top: 14px;">
+              <span>Rahul is designated to accompany you to this appointment.</span>
+            </div>
+          </article>
+
+          <!-- ------------------------------------------------------------
+               BENTO CARD 5: IMPORTANT ALERTS (6 Spans)
+               ------------------------------------------------------------ -->
+          <article class="bento-card span-6" aria-labelledby="card-alerts-title">
+            <div>
+              <div class="card-header-row">
+                <div class="card-title-group">
+                  <span class="card-header-icon" aria-hidden="true">🔔</span>
+                  <h3 class="card-title" id="card-alerts-title">Important Alerts</h3>
+                </div>
+                <span class="status-badge warning">3 Alerts</span>
+              </div>
+
+              <div class="alerts-list">
+                <div class="alert-item urgent">
+                  <span class="alert-icon" aria-hidden="true">🔔</span>
+                  <div>
+                    <div class="alert-title">Medicine Reminder</div>
+                    <div class="alert-desc">Multivitamin is due in 1 hour (1:00 PM).</div>
+                  </div>
+                </div>
+
+                <div class="alert-item">
+                  <span class="alert-icon" aria-hidden="true">📅</span>
+                  <div>
+                    <div class="alert-title">Appointment Tomorrow</div>
+                    <div class="alert-desc">Dr. Sharma at 10:30 AM. Clinic transport confirmed.</div>
+                  </div>
+                </div>
+
+                <div class="alert-item message">
+                  <span class="alert-icon" aria-hidden="true">💬</span>
+                  <div>
+                    <div class="alert-title">Caregiver Message</div>
+                    <div class="alert-desc">"Hi Mom, I will come by at 5:00 PM!" — Rahul</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="card-footer-note" style="margin-top: 14px;">
+              <span>All notifications are automatically backed up.</span>
+            </div>
+          </article>
+
+          <!-- ------------------------------------------------------------
+               BENTO CARD 6: RECENT ACTIVITY (6 Spans)
+               ------------------------------------------------------------ -->
+          <article class="bento-card span-6" aria-labelledby="card-activity-title">
+            <div>
+              <div class="card-header-row">
+                <div class="card-title-group">
+                  <span class="card-header-icon" aria-hidden="true">📝</span>
+                  <h3 class="card-title" id="card-activity-title">Recent Activity</h3>
+                </div>
+                <span class="status-badge good">Live</span>
+              </div>
+
+              <div class="activity-timeline" id="recentActivityList">
+                <div class="timeline-item">
+                  <div class="timeline-bullet">✓</div>
+                  <div class="timeline-content">
+                    <span class="timeline-text">Morning check-in completed</span>
+                    <span class="timeline-time">Today · 8:15 AM</span>
+                  </div>
+                </div>
+
+                <div class="timeline-item">
+                  <div class="timeline-bullet">✓</div>
+                  <div class="timeline-content">
+                    <span class="timeline-text">Morning medicine taken</span>
+                    <span class="timeline-time">Today · 8:02 AM</span>
+                  </div>
+                </div>
+
+                <div class="timeline-item">
+                  <div class="timeline-bullet scheduled">🚶</div>
+                  <div class="timeline-content">
+                    <span class="timeline-text">Daily activity recorded (1,420 steps)</span>
+                    <span class="timeline-time">Today · 9:30 AM</span>
+                  </div>
+                </div>
+
+                <div class="timeline-item">
+                  <div class="timeline-bullet scheduled">📅</div>
+                  <div class="timeline-content">
+                    <span class="timeline-text">Appointment scheduled with Dr. Sharma</span>
+                    <span class="timeline-time">Yesterday · 4:10 PM</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="card-footer-note" style="margin-top: 14px;">
+              <span>Updated automatically every hour.</span>
+            </div>
+          </article>
+
+          <!-- BENTO CARD 7 (AI ASSISTANT): Disabled for current development phase -->
+
+          <!-- ------------------------------------------------------------
+               BENTO CARD 8: EMERGENCY & HELP (Full Span 12)
+               ------------------------------------------------------------ -->
+          <article class="bento-card span-12 emergency-card" aria-labelledby="card-emergency-title">
+            <div class="emergency-action-box">
+              <div class="emergency-info-side">
+                <div style="display: flex; align-items: center; gap: 10px;">
+                  <span style="font-size: 2rem;" aria-hidden="true">🆘</span>
+                  <h3 class="emergency-heading" id="card-emergency-title">Need help right now?</h3>
+                </div>
+                <p class="emergency-contact-detail">
+                  Caregiver: <strong>Rahul (Son)</strong> · Available · Direct Line: (555) 019-2834
+                </p>
+                <p style="font-size: 0.95rem; color: var(--text-secondary);">
+                  Pressing Get Help will immediately notify your designated family member and emergency care team.
+                </p>
+              </div>
+
+              <div>
+                <button class="emergency-get-help-btn" id="emergencyHelpTriggerBtn" aria-label="Get Help Now - Emergency assistance">
+                  <span aria-hidden="true">🚨</span>
+                  <span>Get Help</span>
+                </button>
+              </div>
+            </div>
+          </article>
+        </div>
+      </section>
+
+      <!-- ================================================================
+           VIEW 2: HEALTH MONITORING PAGE (Detailed Vitals, Trends, History)
+           ================================================================ -->
+      <section class="view-container view-section" id="health-view" aria-labelledby="health-page-heading">
+        <div class="view-header">
+          <h2 class="view-title" id="health-page-heading">Detailed Health Monitoring</h2>
+          <p class="view-subtitle">Readings and gentle trends tracked from your remote monitoring sensors.</p>
+        </div>
+
+        <div class="bento-grid">
+          <!-- Heart Rate Detailed Card -->
+          <article class="bento-card span-6">
+            <div class="card-header-row">
+              <div class="card-title-group">
+                <span class="card-header-icon" aria-hidden="true">❤️</span>
+                <h3 class="card-title">Heart Rate History</h3>
+              </div>
+              <span class="status-badge good">Average: 72 bpm</span>
+            </div>
+            <div style="margin: 16px 0;">
+              <p style="font-size: 1.05rem; color: var(--text-secondary); margin-bottom: 12px;">
+                Today's range: <strong>65 – 84 bpm</strong> (Resting: 68 bpm)
+              </p>
+              <!-- SVG Visual Trend Line -->
+              <div style="background: var(--bg-card-subtle); padding: 16px; border-radius: var(--radius-md); border: 1px solid var(--border-subtle);">
+                <svg viewBox="0 0 400 120" style="width: 100%; height: 100px;" aria-label="Heart rate trend graph showing steady normal rhythm">
+                  <polyline fill="none" stroke="rgba(15, 118, 110, 0.2)" stroke-width="2" stroke-dasharray="4" points="0,60 400,60" />
+                  <polyline fill="none" stroke="var(--primary)" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"
+                    points="20,70 70,62 120,68 170,55 220,74 270,65 320,60 370,64" />
+                  <circle cx="370" cy="64" r="6" fill="var(--primary)" />
+                </svg>
+                <div style="display: flex; justify-content: space-between; font-size: 0.85rem; color: var(--text-muted); margin-top: 6px;">
+                  <span>6:00 AM</span>
+                  <span>9:00 AM</span>
+                  <span>12:00 PM</span>
+                  <span>3:00 PM</span>
+                  <span>Now</span>
+                </div>
+              </div>
+            </div>
+            <div class="card-footer-note">
+              <span>Status: Rhythm is regular and within your healthy baseline.</span>
+            </div>
+          </article>
+
+          <!-- Blood Pressure Detailed Card -->
+          <article class="bento-card span-6">
+            <div class="card-header-row">
+              <div class="card-title-group">
+                <span class="card-header-icon" aria-hidden="true">🩸</span>
+                <h3 class="card-title">Blood Pressure</h3>
+              </div>
+              <span class="status-badge good">Latest: 120/80</span>
+            </div>
+            <div style="margin: 16px 0;">
+              <p style="font-size: 1.05rem; color: var(--text-secondary); margin-bottom: 12px;">
+                Systolic / Diastolic baseline: <strong>Stable over past 7 days</strong>
+              </p>
+              <div style="display: flex; gap: 14px;">
+                <div style="flex: 1; background: var(--bg-card-subtle); padding: 16px; border-radius: var(--radius-md); border: 1px solid var(--border-subtle); text-align: center;">
+                  <span style="font-size: 0.9rem; color: var(--text-muted); font-weight: 700;">Morning</span>
+                  <div style="font-size: 1.8rem; font-weight: 800; color: var(--text-main);">120/80</div>
+                  <span style="font-size: 0.85rem; color: var(--status-good); font-weight: 700;">✓ Optimal</span>
+                </div>
+                <div style="flex: 1; background: var(--bg-card-subtle); padding: 16px; border-radius: var(--radius-md); border: 1px solid var(--border-subtle); text-align: center;">
+                  <span style="font-size: 0.9rem; color: var(--text-muted); font-weight: 700;">Yesterday Evening</span>
+                  <div style="font-size: 1.8rem; font-weight: 800; color: var(--text-main);">122/82</div>
+                  <span style="font-size: 0.85rem; color: var(--status-good); font-weight: 700;">✓ Normal</span>
+                </div>
+              </div>
+            </div>
+            <div class="card-footer-note">
+              <span>Next cuff check suggested at 7:00 PM tonight.</span>
+            </div>
+          </article>
+
+          <!-- SpO2 & Oxygen Detailed Card -->
+          <article class="bento-card span-4">
+            <div class="card-header-row">
+              <div class="card-title-group">
+                <span class="card-header-icon" aria-hidden="true">🫁</span>
+                <h3 class="card-title">Blood Oxygen (SpO₂)</h3>
+              </div>
+              <span class="status-badge good">98%</span>
+            </div>
+            <p style="font-size: 1.05rem; color: var(--text-secondary); margin-bottom: 14px;">
+              Healthy range is 95% – 100%. Your lungs and blood oxygen levels are strong and consistent.
+            </p>
+            <div class="card-footer-note">
+              <span>Continuous pulse-ox monitoring is active.</span>
+            </div>
+          </article>
+
+          <!-- Temperature Card -->
+          <article class="bento-card span-4">
+            <div class="card-header-row">
+              <div class="card-title-group">
+                <span class="card-header-icon" aria-hidden="true">🌡️</span>
+                <h3 class="card-title">Body Temperature</h3>
+              </div>
+              <span class="status-badge good">98.4 °F</span>
+            </div>
+            <p style="font-size: 1.05rem; color: var(--text-secondary); margin-bottom: 14px;">
+              Normal range: 97.0°F – 99.0°F. No fever detected.
+            </p>
+            <div class="card-footer-note">
+              <span>Checked automatically via wearable sensor.</span>
+            </div>
+          </article>
+
+          <!-- Physical Activity & Steps -->
+          <article class="bento-card span-4">
+            <div class="card-header-row">
+              <div class="card-title-group">
+                <span class="card-header-icon" aria-hidden="true">🚶</span>
+                <h3 class="card-title">Daily Activity</h3>
+              </div>
+              <span class="status-badge info">1,420 steps</span>
+            </div>
+            <p style="font-size: 1.05rem; color: var(--text-secondary); margin-bottom: 14px;">
+              Goal: 2,000 gentle steps. You have completed 71% of your daily movement goal!
+            </p>
+            <div class="card-footer-note">
+              <span>Great job on your 20-min morning garden stroll!</span>
+            </div>
+          </article>
+
+          <!-- Sleep Quality Card -->
+          <article class="bento-card span-12">
+            <div class="card-header-row">
+              <div class="card-title-group">
+                <span class="card-header-icon" aria-hidden="true">🌙</span>
+                <h3 class="card-title">Sleep Quality & Rest</h3>
+              </div>
+              <span class="status-badge good">7 hrs 45 mins</span>
+            </div>
+            <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin: 12px 0;">
+              <div style="background: var(--bg-card-subtle); padding: 14px; border-radius: var(--radius-md); border: 1px solid var(--border-subtle);">
+                <span style="font-size: 0.9rem; color: var(--text-muted);">Bedtime</span>
+                <div style="font-size: 1.4rem; font-weight: 700;">10:15 PM</div>
+              </div>
+              <div style="background: var(--bg-card-subtle); padding: 14px; border-radius: var(--radius-md); border: 1px solid var(--border-subtle);">
+                <span style="font-size: 0.9rem; color: var(--text-muted);">Wake up</span>
+                <div style="font-size: 1.4rem; font-weight: 700;">6:00 AM</div>
+              </div>
+              <div style="background: var(--bg-card-subtle); padding: 14px; border-radius: var(--radius-md); border: 1px solid var(--border-subtle);">
+                <span style="font-size: 0.9rem; color: var(--text-muted);">Restful Score</span>
+                <div style="font-size: 1.4rem; font-weight: 700; color: var(--status-good);">88 / 100 (Peaceful)</div>
+              </div>
+            </div>
+            <div class="card-footer-note">
+              <span>Calm, undisturbed sleep recorded last night.</span>
+            </div>
+          </article>
+        </div>
+      </section>
+
+      <!-- ================================================================
+           VIEW 3: MEDICATIONS SCHEDULE & TRACKER
+           ================================================================ -->
+      <section class="view-container view-section" id="medications-view" aria-labelledby="meds-page-heading">
+        <div class="view-header">
+          <h2 class="view-title" id="meds-page-heading">Daily Medication Schedule</h2>
+          <p class="view-subtitle">Clear times, dosages, and simple buttons to mark each pill taken.</p>
+        </div>
+
+        <div class="bento-grid">
+          <!-- Full Schedule Card -->
+          <article class="bento-card span-8">
+            <div class="card-header-row">
+              <div class="card-title-group">
+                <span class="card-header-icon" aria-hidden="true">💊</span>
+                <h3 class="card-title">Today's Prescriptions</h3>
+              </div>
+              <span class="status-badge good" id="medAdherenceBadge">1 of 3 taken today</span>
+            </div>
+
+            <div class="med-list" id="fullMedScheduleList">
+              <!-- Item 1 -->
+              <div class="med-item">
+                <div class="med-info">
+                  <div class="med-icon-box" aria-hidden="true">☀️</div>
+                  <div>
+                    <div class="med-name">Amlodipine (Blood Pressure)</div>
+                    <div class="med-meta">5 mg Tablet · Take 1 pill every morning with water after food</div>
+                    <div style="font-size: 0.85rem; color: var(--status-good); font-weight: 700; margin-top: 4px;">
+                      ✓ Taken at 8:02 AM
+                    </div>
+                  </div>
+                </div>
+                <button class="med-action-btn taken" data-med-id="med-1">Taken ✓</button>
+              </div>
+
+              <!-- Item 2 -->
+              <div class="med-item">
+                <div class="med-info">
+                  <div class="med-icon-box" aria-hidden="true">🍽️</div>
+                  <div>
+                    <div class="med-name">Multivitamin & Calcium</div>
+                    <div class="med-meta">1 Tablet · Take 1 tablet daily after afternoon lunch</div>
+                    <div style="font-size: 0.85rem; color: var(--status-warning); font-weight: 700; margin-top: 4px;">
+                      ⏰ Due at 1:00 PM
+                    </div>
+                  </div>
+                </div>
+                <button class="med-action-btn" data-med-id="med-2">Mark as taken</button>
+              </div>
+
+              <!-- Item 3 -->
+              <div class="med-item">
+                <div class="med-info">
+                  <div class="med-icon-box" aria-hidden="true">🌙</div>
+                  <div>
+                    <div class="med-name">Metformin (Glucose Control)</div>
+                    <div class="med-meta">500 mg Tablet · Take 1 pill with evening meal</div>
+                    <div style="font-size: 0.85rem; color: var(--text-muted); font-weight: 700; margin-top: 4px;">
+                      🕒 Upcoming at 8:00 PM
+                    </div>
+                  </div>
+                </div>
+                <button class="med-action-btn" data-med-id="med-3">Mark as taken</button>
+              </div>
+            </div>
+            <div class="card-footer-note">
+              <span>All prescription details are verified by Dr. Sharma.</span>
+            </div>
+          </article>
+
+          <!-- Pharmacy Refill Card -->
+          <article class="bento-card span-4">
+            <div class="card-header-row">
+              <div class="card-title-group">
+                <span class="card-header-icon" aria-hidden="true">📦</span>
+                <h3 class="card-title">Pharmacy Refills</h3>
+              </div>
+              <span class="status-badge info">Active</span>
+            </div>
+            <div style="display: flex; flex-direction: column; gap: 14px; margin: 12px 0;">
+              <div style="background: var(--bg-card-subtle); padding: 14px; border-radius: var(--radius-md); border: 1px solid var(--border-subtle);">
+                <div style="font-weight: 700;">Amlodipine 5mg</div>
+                <div style="font-size: 0.9rem; color: var(--text-secondary);">22 days remaining in pill dispenser</div>
+              </div>
+              <div style="background: var(--bg-card-subtle); padding: 14px; border-radius: var(--radius-md); border: 1px solid var(--border-subtle);">
+                <div style="font-weight: 700;">Metformin 500mg</div>
+                <div style="font-size: 0.9rem; color: var(--text-secondary);">18 days remaining</div>
+              </div>
+              <button class="btn-secondary" id="requestRefillBtn">
+                <span>Request Refill Delivery</span>
+              </button>
+            </div>
+            <div class="card-footer-note">
+              <span>Preferred Pharmacy: MedPlus Care, 2nd Avenue.</span>
+            </div>
+          </article>
+        </div>
+      </section>
+
+      <!-- ================================================================
+           VIEW 4: APPOINTMENTS PAGE
+           ================================================================ -->
+      <section class="view-container view-section" id="appointments-view" aria-labelledby="appt-page-heading">
+        <div class="view-header">
+          <h2 class="view-title" id="appt-page-heading">Doctor Visits & Consultations</h2>
+          <p class="view-subtitle">Upcoming appointments with your healthcare team and notes from previous visits.</p>
+        </div>
+
+        <div class="bento-grid">
+          <!-- Upcoming Appointment Detail -->
+          <article class="bento-card span-7">
+            <div class="card-header-row">
+              <div class="card-title-group">
+                <span class="card-header-icon" aria-hidden="true">📅</span>
+                <h3 class="card-title">Upcoming Visit</h3>
+              </div>
+              <span class="status-badge info">Tomorrow 10:30 AM</span>
+            </div>
+
+            <div class="appointment-detail-box">
+              <div class="doctor-profile-row">
+                <div class="doctor-avatar" aria-hidden="true">👨‍⚕️</div>
+                <div>
+                  <h4 class="doctor-name">Dr. Sharma</h4>
+                  <p class="doctor-spec">Geriatric Medicine Specialist</p>
+                  <p style="font-size: 0.9rem; color: var(--text-muted); margin-top: 2px;">
+                    Wellness Family Health Clinic · 124 Medical Park Rd
+                  </p>
+                </div>
+              </div>
+
+              <div style="display: flex; gap: 10px; flex-wrap: wrap;">
+                <span class="status-badge good">✓ Transport confirmed with Rahul</span>
+                <span class="status-badge info">📋 Routine 6-month wellness review</span>
+              </div>
+
+              <div style="display: flex; gap: 12px; margin-top: 10px;">
+                <button class="btn-secondary" style="flex: 1;" id="callDoctorOfficeBtn">
+                  <span>📞 Call Clinic</span>
+                </button>
+                <button class="btn-secondary" style="flex: 1;" id="viewDirectionsBtn">
+                  <span>📍 Directions</span>
+                </button>
+              </div>
+            </div>
+
+            <div class="card-footer-note">
+              <span>Need to reschedule? Your caregiver Rahul can adjust the timing.</span>
+            </div>
+          </article>
+
+          <!-- Past Appointments Summary -->
+          <article class="bento-card span-5">
+            <div class="card-header-row">
+              <div class="card-title-group">
+                <span class="card-header-icon" aria-hidden="true">📋</span>
+                <h3 class="card-title">Past Consultations</h3>
+              </div>
+              <span class="status-badge good">Completed</span>
+            </div>
+
+            <div style="display: flex; flex-direction: column; gap: 12px;">
+              <div style="background: var(--bg-card-subtle); padding: 14px; border-radius: var(--radius-md); border: 1px solid var(--border-subtle);">
+                <div style="font-weight: 700;">Dr. Anita Roy (Cardiologist)</div>
+                <div style="font-size: 0.9rem; color: var(--text-secondary);">August 12, 2026 · ECG Normal & Stable</div>
+              </div>
+              <div style="background: var(--bg-card-subtle); padding: 14px; border-radius: var(--radius-md); border: 1px solid var(--border-subtle);">
+                <div style="font-weight: 700;">Dr. Sharma (Geriatrician)</div>
+                <div style="font-size: 0.9rem; color: var(--text-secondary);">March 24, 2026 · Blood pressure medication adjusted</div>
+              </div>
+            </div>
+            <div class="card-footer-note" style="margin-top: 14px;">
+              <span>Doctor clinical summaries are saved securely.</span>
+            </div>
+          </article>
+        </div>
+      </section>
+
+      <!-- ================================================================
+           VIEW: HEALTH & SYSTEM ANALYSIS (Bento Analytics Dashboard)
+           ================================================================ -->
+      <section class="view-container view-section" id="analysis-view" aria-labelledby="analysis-page-heading">
+        <div class="view-header">
+          <div style="display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 12px;">
+            <div>
+              <h2 class="view-title" id="analysis-page-heading">Health & System Analytics</h2>
+              <p class="view-subtitle">High-contrast Bento overview of vitality trends, weekly consistency, and system balance.</p>
+            </div>
+            <span class="status-badge good" style="font-weight: 800; font-size: 0.95rem;">
+              ● Real-time Metrics Synced
+            </span>
+          </div>
+        </div>
+
+        <!-- 2-Column Bento Analytics Grid -->
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(340px, 1fr)); gap: 24px; align-items: stretch;">
+          
+          <!-- LEFT COLUMN: Bar Chart + Radar Chart -->
+          <div style="display: flex; flex-direction: column; gap: 24px;">
+            
+            <!-- 1. BRUTALIST BAR CHART -->
+            <article class="brutalist-card">
+              <h3 class="brutalist-title">Weekly Vitality & Activity</h3>
+              <p style="font-size: 0.9rem; color: var(--text-secondary); margin-bottom: 12px;">
+                Percentage of daily movement & physical stability goals achieved this week.
+              </p>
+              
+              <div class="brutalist-bar-chart" id="brutalistBarChart">
+                <!-- Mon -->
+                <div class="brutalist-bar-col">
+                  <div class="brutalist-bar-tooltip">Monday: 40% (Rest day)</div>
+                  <div class="brutalist-bar bar-red" style="height: 40%;" data-value="40">
+                    <span class="brutalist-bar-label">MON</span>
+                  </div>
+                </div>
+                <!-- Tue -->
+                <div class="brutalist-bar-col">
+                  <div class="brutalist-bar-tooltip">Tuesday: 60% (Moderate)</div>
+                  <div class="brutalist-bar bar-blue" style="height: 60%;" data-value="60">
+                    <span class="brutalist-bar-label">TUE</span>
+                  </div>
+                </div>
+                <!-- Wed -->
+                <div class="brutalist-bar-col">
+                  <div class="brutalist-bar-tooltip">Wednesday: 25% (Light rest)</div>
+                  <div class="brutalist-bar bar-green" style="height: 25%;" data-value="25">
+                    <span class="brutalist-bar-label">WED</span>
+                  </div>
+                </div>
+                <!-- Thu -->
+                <div class="brutalist-bar-col">
+                  <div class="brutalist-bar-tooltip">Thursday: 80% (Garden walk)</div>
+                  <div class="brutalist-bar bar-yellow" style="height: 80%;" data-value="80">
+                    <span class="brutalist-bar-label">THU</span>
+                  </div>
+                </div>
+                <!-- Fri -->
+                <div class="brutalist-bar-col">
+                  <div class="brutalist-bar-tooltip">Friday: 65% (Active routine)</div>
+                  <div class="brutalist-bar bar-purple" style="height: 65%;" data-value="65">
+                    <span class="brutalist-bar-label">FRI</span>
+                  </div>
+                </div>
+              </div>
+              <div style="display: flex; justify-content: space-between; font-size: 0.85rem; color: var(--text-muted); margin-top: 14px; border-top: 1px solid var(--border-subtle); padding-top: 8px;">
+                <span>Weekly Average: <strong>54%</strong></span>
+                <span>Target: <strong>50%+ for healthy recovery</strong></span>
+              </div>
+            </article>
+
+            <!-- 2. BRUTALIST RADAR CHART -->
+            <article class="brutalist-card">
+              <h3 class="brutalist-title">System Health Balance</h3>
+              
+              <div class="radar-layout">
+                <!-- SVG Radar -->
+                <div class="radar-chart-area">
+                  <svg viewBox="0 0 200 200" style="width: 200px; height: 200px; overflow: visible;">
+                    <!-- Concentric Grid -->
+                    <circle cx="100" cy="100" r="80" fill="none" stroke="currentColor" stroke-width="1.5" stroke-dasharray="4 4" style="opacity: 0.15;" />
+                    <circle cx="100" cy="100" r="60" fill="none" stroke="currentColor" stroke-width="1.5" stroke-dasharray="4 4" style="opacity: 0.15;" />
+                    <circle cx="100" cy="100" r="40" fill="none" stroke="currentColor" stroke-width="1.5" stroke-dasharray="4 4" style="opacity: 0.15;" />
+                    <circle cx="100" cy="100" r="20" fill="none" stroke="currentColor" stroke-width="1.5" stroke-dasharray="4 4" style="opacity: 0.15;" />
+                    
+                    <!-- Axes -->
+                    <line x1="100" y1="100" x2="100" y2="20" stroke="currentColor" stroke-width="1.5" style="opacity: 0.2;" />
+                    <line x1="100" y1="100" x2="176" y2="75" stroke="currentColor" stroke-width="1.5" style="opacity: 0.2;" />
+                    <line x1="100" y1="100" x2="147" y2="165" stroke="currentColor" stroke-width="1.5" style="opacity: 0.2;" />
+                    <line x1="100" y1="100" x2="53" y2="165" stroke="currentColor" stroke-width="1.5" style="opacity: 0.2;" />
+                    <line x1="100" y1="100" x2="24" y2="75" stroke="currentColor" stroke-width="1.5" style="opacity: 0.2;" />
+
+                    <!-- Radar Polygon: 85, 95, 75, 65, 80 -->
+                    <polygon id="radarPolygon" points="100,32 172,77 135,149 69,142 39,80" 
+                      fill="rgba(167, 139, 250, 0.45)" stroke="var(--text-main)" stroke-width="3" stroke-linejoin="round" />
+                    
+                    <!-- Points -->
+                    <circle cx="100" cy="32" r="5" fill="#F87171" stroke="var(--text-main)" stroke-width="2" />
+                    <circle cx="172" cy="77" r="5" fill="#4ADE80" stroke="var(--text-main)" stroke-width="2" />
+                    <circle cx="135" cy="149" r="5" fill="#60A5FA" stroke="var(--text-main)" stroke-width="2" />
+                    <circle cx="69" cy="142" r="5" fill="#FBBF24" stroke="var(--text-main)" stroke-width="2" />
+                    <circle cx="39" cy="80" r="5" fill="#A78BFA" stroke="var(--text-main)" stroke-width="2" />
+                  </svg>
+                </div>
+
+                <!-- Stats Breakdown List -->
+                <div class="radar-stats-list">
+                  <div class="radar-stat-item" data-metric="mobility">
+                    <div style="display: flex; align-items: center; gap: 8px;">
+                      <span class="radar-stat-indicator" style="background: #F87171;"></span>
+                      <span style="font-weight: 800; font-size: 0.85rem;">SPEED / Mobility</span>
+                    </div>
+                    <span style="font-weight: 900;">85%</span>
+                  </div>
+
+                  <div class="radar-stat-item" data-metric="uptime">
+                    <div style="display: flex; align-items: center; gap: 8px;">
+                      <span class="radar-stat-indicator" style="background: #4ADE80;"></span>
+                      <span style="font-weight: 800; font-size: 0.85rem;">UPTIME / Meds</span>
+                    </div>
+                    <span style="font-weight: 900;">95%</span>
+                  </div>
+
+                  <div class="radar-stat-item" data-metric="vitals">
+                    <div style="display: flex; align-items: center; gap: 8px;">
+                      <span class="radar-stat-indicator" style="background: #60A5FA;"></span>
+                      <span style="font-weight: 800; font-size: 0.85rem;">SECURE / Vitals</span>
+                    </div>
+                    <span style="font-weight: 900;">75%</span>
+                  </div>
+
+                  <div class="radar-stat-item" data-metric="sleep">
+                    <div style="display: flex; align-items: center; gap: 8px;">
+                      <span class="radar-stat-indicator" style="background: #FBBF24;"></span>
+                      <span style="font-weight: 800; font-size: 0.85rem;">UX / Sleep</span>
+                    </div>
+                    <span style="font-weight: 900;">65%</span>
+                  </div>
+
+                  <div class="radar-stat-item" data-metric="hydration">
+                    <div style="display: flex; align-items: center; gap: 8px;">
+                      <span class="radar-stat-indicator" style="background: #A78BFA;"></span>
+                      <span style="font-weight: 800; font-size: 0.85rem;">SEO / Habits</span>
+                    </div>
+                    <span style="font-weight: 900;">80%</span>
+                  </div>
+                </div>
+              </div>
+            </article>
+          </div>
+
+          <!-- RIGHT COLUMN: Full-Height Donut Chart -->
+          <article class="brutalist-card donut-layout" style="min-height: 520px; justify-content: space-between;">
+            <div style="width: 100%;">
+              <h3 class="brutalist-title" style="text-align: center;">Daily System Health Load</h3>
+              <p style="font-size: 0.9rem; color: var(--text-secondary); text-align: center; margin-bottom: 24px;">
+                Proportional breakdown of daily elderly care adherence & biometric signals.
+              </p>
+            </div>
+
+            <!-- SVG Donut -->
+            <div style="position: relative; display: flex; align-items: center; justify-content: center;">
+              <svg viewBox="-1.2 -1.2 2.4 2.4" class="donut-chart-svg">
+                <!-- Slice 1: 0 to 0.35 -->
+                <path class="donut-slice" data-slice-name="Rest & Sleep" data-slice-val="35"
+                  d="M 1 0 A 1 1 0 0 1 -0.5878 0.8090 L 0 0 Z" fill="#F87171" />
+                
+                <!-- Slice 2: 0.35 to 0.60 -->
+                <path class="donut-slice" data-slice-name="Physical Activity" data-slice-val="25"
+                  d="M -0.5878 0.8090 A 1 1 0 0 1 -0.8090 -0.5878 L 0 0 Z" fill="#4ADE80" />
+
+                <!-- Slice 3: 0.60 to 0.85 -->
+                <path class="donut-slice" data-slice-name="Medication Adherence" data-slice-val="25"
+                  d="M -0.8090 -0.5878 A 1 1 0 0 1 0.5878 -0.8090 L 0 0 Z" fill="#60A5FA" />
+
+                <!-- Slice 4: 0.85 to 1.00 -->
+                <path class="donut-slice" data-slice-name="Vital Stability" data-slice-val="15"
+                  d="M 0.5878 -0.8090 A 1 1 0 0 1 1 0 L 0 0 Z" fill="#FBBF24" />
+
+                <!-- Inner Cutout Circle -->
+                <circle cx="0" cy="0" r="0.55" fill="var(--bg-card)" stroke="var(--text-main)" stroke-width="0.04" />
+              </svg>
+
+              <!-- Central Percentage Readout -->
+              <div class="donut-center-text">
+                <div class="donut-center-val" id="donutCenterVal">100%</div>
+                <div class="donut-center-lbl" id="donutCenterLbl">TOTAL STABILITY</div>
+              </div>
+            </div>
+
+            <!-- Legend Grid -->
+            <div class="donut-legend">
+              <div class="donut-legend-item" data-slice="0">
+                <span class="radar-stat-indicator" style="background: #F87171;"></span>
+                <span style="font-weight: 800; font-size: 0.9rem;">Rest & Sleep (35%)</span>
+              </div>
+              <div class="donut-legend-item" data-slice="1">
+                <span class="radar-stat-indicator" style="background: #4ADE80;"></span>
+                <span style="font-weight: 800; font-size: 0.9rem;">Activity (25%)</span>
+              </div>
+              <div class="donut-legend-item" data-slice="2">
+                <span class="radar-stat-indicator" style="background: #60A5FA;"></span>
+                <span style="font-weight: 800; font-size: 0.9rem;">Medicines (25%)</span>
+              </div>
+              <div class="donut-legend-item" data-slice="3">
+                <span class="radar-stat-indicator" style="background: #FBBF24;"></span>
+                <span style="font-weight: 800; font-size: 0.9rem;">Stability (15%)</span>
+              </div>
+            </div>
+
+            <div class="card-footer-note" style="margin-top: 20px; width: 100%;">
+              <span>Hover over any chart element for detailed biometrics.</span>
+            </div>
+          </article>
+        </div>
+      </section>
+
+      <!-- ================================================================
+           VIEW 5: AI CONVERSATIONAL ASSISTANT PAGE
+           ================================================================ -->
+      <section class="view-container view-section" id="ai-assistant-view" aria-labelledby="ai-page-heading">
+        <div class="view-header">
+          <h2 class="view-title" id="ai-page-heading">AI Care Assistant</h2>
+          <p class="view-subtitle">Ask questions about your day, medicines, appointments, or get friendly assistance.</p>
+        </div>
+
+        <div class="bento-grid">
+          <!-- Chat Window Card -->
+          <article class="bento-card span-12" style="min-height: 520px; display: flex; flex-direction: column;">
+            <div class="card-header-row">
+              <div class="card-title-group">
+                <div class="ai-avatar-box" aria-hidden="true">🤖</div>
+                <div>
+                  <h3 class="card-title">Care Assistant</h3>
+                  <span style="font-size: 0.85rem; color: var(--status-good); font-weight: 700;">● Online & Ready to help</span>
+                </div>
+              </div>
+              <span class="status-badge info">Human-Centered Companion</span>
+            </div>
+
+            <!-- Chat History Feed -->
+            <div id="aiChatFeed" style="flex: 1; overflow-y: auto; display: flex; flex-direction: column; gap: 16px; padding: 16px 8px; border-bottom: 1px solid var(--border-subtle);" role="log" aria-live="polite">
+              <!-- Initial Welcome Message -->
+              <div style="display: flex; gap: 12px; align-items: flex-start; max-width: 80%;">
+                <div class="ai-avatar-box" style="width: 36px; height: 36px; font-size: 1.1rem;" aria-hidden="true">🤖</div>
+                <div style="background: var(--primary-soft); padding: 14px 18px; border-radius: var(--radius-md); font-size: 1.05rem; color: var(--text-main); border: 1px solid rgba(15, 118, 110, 0.2);">
+                  Hello Meera! I am your Care Assistant. I am here to help remind you of medicines, check your schedule, or notify Rahul if you need anything. How can I support you right now?
+                </div>
+              </div>
+            </div>
+
+            <!-- Suggested Preset Prompts -->
+            <div style="padding: 14px 0 10px 0;">
+              <span class="ai-chips-label" style="display: block; margin-bottom: 8px;">Suggested questions:</span>
+              <div style="display: flex; gap: 10px; flex-wrap: wrap;">
+                <button class="ai-chip-btn ai-quick-ask" data-query="Remind me about my medicine.">
+                  “Remind me about my medicine.”
+                </button>
+                <button class="ai-chip-btn ai-quick-ask" data-query="Do I have an appointment today?">
+                  “Do I have an appointment today?”
+                </button>
+                <button class="ai-chip-btn ai-quick-ask" data-query="I don't feel well.">
+                  “I don't feel well.”
+                </button>
+                <button class="ai-chip-btn ai-quick-ask" data-query="When is Rahul visiting?">
+                  “When is Rahul visiting?”
+                </button>
+              </div>
+            </div>
+
+            <!-- Chat Input Area -->
+            <form id="aiChatForm" style="display: flex; gap: 12px; margin-top: 10px;" onsubmit="return false;">
+              <input type="text" id="aiChatInput" placeholder="Type your question or message here..."
+                style="flex: 1; padding: 16px 20px; font-size: 1.1rem; border-radius: var(--radius-md); border: 2px solid var(--border-subtle); outline: none; transition: var(--transition-smooth);"
+                aria-label="Ask the care assistant a question">
+              <button type="submit" id="aiSendBtn"
+                style="padding: 14px 28px; background: var(--primary); color: #FFF; border: none; border-radius: var(--radius-md); font-size: 1.1rem; font-weight: 700; cursor: pointer; min-height: var(--touch-target);">
+                Send 💬
+              </button>
+            </form>
+
+            <div class="card-footer-note" style="margin-top: 14px;">
+              <span>Notice: This assistant provides caring guidance and reminders. It does not provide medical diagnoses.</span>
+            </div>
+          </article>
+        </div>
+      </section>
+
+      <!-- ================================================================
+           VIEW 6: EMERGENCY & HELP PAGE
+           ================================================================ -->
+      <section class="view-container view-section" id="emergency-view" aria-labelledby="emerg-page-heading">
+        <div class="view-header">
+          <h2 class="view-title" id="emerg-page-heading" style="color: var(--status-alert);">Emergency & Assistance Center</h2>
+          <p class="view-subtitle">Immediate help is always available with a single touch.</p>
+        </div>
+
+        <div class="bento-grid">
+          <!-- Giant Immediate Alert Card -->
+          <article class="bento-card span-12 emergency-card" style="padding: 36px 32px;">
+            <div style="display: flex; flex-direction: column; align-items: center; text-align: center; gap: 20px;">
+              <div class="modal-icon-badge" style="width: 80px; height: 80px; font-size: 2.8rem;">🚨</div>
+              <div>
+                <h3 style="font-size: 2rem; font-weight: 800; color: var(--status-alert);">Do you need urgent help?</h3>
+                <p style="font-size: 1.2rem; color: var(--text-secondary); max-width: 650px; margin: 8px auto;">
+                  Press the button below. It will sound an alert, send high-priority SMS alerts to your caregiver Rahul, and prepare emergency dispatch.
+                </p>
+              </div>
+
+              <button class="emergency-get-help-btn" id="fullPageEmergencyTriggerBtn" style="font-size: 1.5rem; padding: 20px 48px; border-radius: var(--radius-lg);">
+                <span aria-hidden="true">🆘</span>
+                <span>PRESS FOR IMMEDIATE HELP</span>
+              </button>
+            </div>
+          </article>
+
+          <!-- Primary Caregiver Contact Card -->
+          <article class="bento-card span-6">
+            <div class="card-header-row">
+              <div class="card-title-group">
+                <span class="card-header-icon" aria-hidden="true">👤</span>
+                <h3 class="card-title">Primary Caregiver</h3>
+              </div>
+              <span class="status-badge good">Available Nearby</span>
+            </div>
+            <div style="background: var(--bg-card-subtle); padding: 20px; border-radius: var(--radius-md); border: 1px solid var(--border-subtle); display: flex; align-items: center; gap: 16px;">
+              <div class="profile-avatar" style="width: 54px; height: 54px; font-size: 1.5rem;">R</div>
+              <div>
+                <div style="font-size: 1.3rem; font-weight: 800;">Rahul Patel (Son)</div>
+                <div style="font-size: 1.05rem; color: var(--text-secondary);">Phone: (555) 019-2834</div>
+                <div style="font-size: 0.9rem; color: var(--status-good); font-weight: 700; margin-top: 4px;">
+                  📍 10 minutes away (At work)
+                </div>
+              </div>
+            </div>
+            <button class="btn-secondary" style="margin-top: 14px;" id="callRahulDirectBtn">
+              <span>📞 Call Rahul Now</span>
+            </button>
+          </article>
+
+          <!-- Medical Information Summary Card -->
+          <article class="bento-card span-6">
+            <div class="card-header-row">
+              <div class="card-title-group">
+                <span class="card-header-icon" aria-hidden="true">🏥</span>
+                <h3 class="card-title">Paramedic & Medical Info</h3>
+              </div>
+              <span class="status-badge info">Verified</span>
+            </div>
+            <div style="display: flex; flex-direction: column; gap: 10px;">
+              <div style="font-size: 1.05rem;"><strong>Patient:</strong> Meera Patel, 72 Years</div>
+              <div style="font-size: 1.05rem;"><strong>Blood Type:</strong> B Positive (B+)</div>
+              <div style="font-size: 1.05rem;"><strong>Known Allergies:</strong> Penicillin (Severe)</div>
+              <div style="font-size: 1.05rem;"><strong>Conditions:</strong> Mild Hypertension, Type 2 Diabetes</div>
+            </div>
+            <div class="card-footer-note" style="margin-top: 14px;">
+              <span>This information is displayed for first responders upon emergency call.</span>
+            </div>
+          </article>
+        </div>
+      </section>
+
+      <!-- ================================================================
+           VIEW 7: CAREGIVER DASHBOARD (Rahul's Remote Monitoring View)
+           ================================================================ -->
+      <section class="view-container view-section" id="caregiver-view" aria-labelledby="cg-heading">
+        <div class="view-header">
+          <div style="display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 12px;">
+            <div>
+              <h2 class="view-title" id="cg-heading">Caregiver Remote Monitoring</h2>
+              <p class="view-subtitle">Supervising: <strong>Meera Patel (Mother, 72)</strong> · Last sync: Just now</p>
+            </div>
+            <span class="status-badge good" style="font-size: 1rem; padding: 8px 16px;">
+              🟢 Remote Sensor Live & Connected
+            </span>
+          </div>
+        </div>
+
+        <div class="bento-grid">
+          <!-- Elderly Person Profile Card -->
+          <article class="bento-card span-4">
+            <div class="card-header-row">
+              <div class="card-title-group">
+                <span class="card-header-icon" aria-hidden="true">👵</span>
+                <h3 class="card-title">Patient Profile</h3>
+              </div>
+              <span class="status-badge good">Stable</span>
+            </div>
+            <div style="display: flex; align-items: center; gap: 14px; margin-bottom: 16px;">
+              <div class="profile-avatar" style="width: 56px; height: 56px; font-size: 1.6rem;">M</div>
+              <div>
+                <h4 style="font-size: 1.25rem; font-weight: 800;">Meera Patel</h4>
+                <p style="font-size: 0.95rem; color: var(--text-secondary);">Age 72 · Home: Green Valley Apt 4B</p>
+              </div>
+            </div>
+            <div style="display: flex; flex-direction: column; gap: 8px; font-size: 0.95rem; color: var(--text-secondary);">
+              <div>• Baseline BP: 120/80 mmHg</div>
+              <div>• Mobility: Independent with walking cane</div>
+              <div>• Emergency Contact: Rahul Patel (Son)</div>
+            </div>
+            <div class="card-footer-note" style="margin-top: 14px;">
+              <span>Dr. Sharma is the primary physician.</span>
+            </div>
+          </article>
+
+          <!-- Caregiver Health Overview -->
+          <article class="bento-card span-8">
+            <div class="card-header-row">
+              <div class="card-title-group">
+                <span class="card-header-icon" aria-hidden="true">📊</span>
+                <h3 class="card-title">Real-Time Vitals Stream</h3>
+              </div>
+              <span class="status-badge good">All Metrics Normal</span>
+            </div>
+            <div class="vitals-grid">
+              <div class="vital-box">
+                <div class="vital-label">Heart Rate</div>
+                <div class="vital-value" style="font-size: 1.8rem;">72 <span class="vital-unit">bpm</span></div>
+                <span class="vital-state">✓ Stable baseline</span>
+              </div>
+              <div class="vital-box">
+                <div class="vital-label">Blood Pressure</div>
+                <div class="vital-value" style="font-size: 1.8rem;">120/80</div>
+                <span class="vital-state">✓ Normal</span>
+              </div>
+              <div class="vital-box">
+                <div class="vital-label">SpO₂ Oxygen</div>
+                <div class="vital-value" style="font-size: 1.8rem;">98 <span class="vital-unit">%</span></div>
+                <span class="vital-state">✓ Good</span>
+              </div>
+              <div class="vital-box">
+                <div class="vital-label">Temperature</div>
+                <div class="vital-value" style="font-size: 1.8rem;">98.4 <span class="vital-unit">°F</span></div>
+                <span class="vital-state">✓ Normal</span>
+              </div>
+            </div>
+            <div class="card-footer-note">
+              <span>No irregular heart rhythms or sudden spikes detected today.</span>
+            </div>
+          </article>
+
+          <!-- Caregiver Medication Compliance -->
+          <article class="bento-card span-6">
+            <div class="card-header-row">
+              <div class="card-title-group">
+                <span class="card-header-icon" aria-hidden="true">💊</span>
+                <h3 class="card-title">Medication Adherence</h3>
+              </div>
+              <span class="status-badge warning" id="cgPillAdherenceStatus">Pending Afternoon Dose</span>
+            </div>
+            <div class="med-list">
+              <div class="med-item">
+                <div>
+                  <div class="med-name">Amlodipine 5mg (Morning)</div>
+                  <div class="med-meta">Scheduled 8:00 AM</div>
+                </div>
+                <span class="status-badge good">✓ Taken (8:02 AM)</span>
+              </div>
+              <div class="med-item">
+                <div>
+                  <div class="med-name">Multivitamin (Afternoon)</div>
+                  <div class="med-meta">Scheduled 1:00 PM</div>
+                </div>
+                <span class="status-badge warning">Due in 1 hr</span>
+              </div>
+              <div class="med-item">
+                <div>
+                  <div class="med-name">Metformin 500mg (Evening)</div>
+                  <div class="med-meta">Scheduled 8:00 PM</div>
+                </div>
+                <span class="status-badge info">Upcoming</span>
+              </div>
+            </div>
+            <button class="btn-secondary" style="margin-top: 14px;" id="sendMedReminderPushBtn">
+              <span>🔔 Send Gentle Reminder to Meera's Screen</span>
+            </button>
+          </article>
+
+          <!-- Caregiver Check-ins & Activity Feed -->
+          <article class="bento-card span-6">
+            <div class="card-header-row">
+              <div class="card-title-group">
+                <span class="card-header-icon" aria-hidden="true">📋</span>
+                <h3 class="card-title">Meera's Check-ins & Activity</h3>
+              </div>
+              <span class="status-badge good">Active</span>
+            </div>
+            <div class="activity-timeline">
+              <div class="timeline-item">
+                <div class="timeline-bullet">😊</div>
+                <div class="timeline-content">
+                  <span class="timeline-text">Meera answered: "Feeling good"</span>
+                  <span class="timeline-time">Today · 8:15 AM</span>
+                </div>
+              </div>
+              <div class="timeline-item">
+                <div class="timeline-bullet">🚶</div>
+                <div class="timeline-content">
+                  <span class="timeline-text">Walked 1,420 steps in building garden</span>
+                  <span class="timeline-time">Today · 9:30 AM</span>
+                </div>
+              </div>
+              <div class="timeline-item">
+                <div class="timeline-bullet scheduled">🌙</div>
+                <div class="timeline-content">
+                  <span class="timeline-text">7 hrs 45 mins uninterrupted sleep</span>
+                  <span class="timeline-time">Last Night · 10:15 PM – 6:00 AM</span>
+                </div>
+              </div>
+            </div>
+            <div class="card-footer-note" style="margin-top: 14px;">
+              <span>Alert thresholds: Heart rate &lt; 50 or &gt; 110 bpm triggers SMS.</span>
+            </div>
+          </article>
+        </div>
+      </section>
+
+      <!-- ================================================================
+           VIEW 8: SETTINGS & ACCESSIBILITY PAGE
+           ================================================================ -->
+      <section class="view-container view-section" id="settings-view" aria-labelledby="settings-page-heading">
+        <div class="view-header">
+          <h2 class="view-title" id="settings-page-heading">Accessibility & Settings</h2>
+          <p class="view-subtitle">Customize text size, contrast, and voice assistance for the most comfortable experience.</p>
+        </div>
+
+        <div class="bento-grid">
+          <article class="bento-card span-6">
+            <div class="card-header-row">
+              <div class="card-title-group">
+                <span class="card-header-icon" aria-hidden="true">👁️</span>
+                <h3 class="card-title">Display & Text Legibility</h3>
+              </div>
+            </div>
+            <div style="display: flex; flex-direction: column; gap: 18px; margin: 12px 0;">
+              <div>
+                <label style="display: block; font-weight: 700; margin-bottom: 8px;">Text Size Scaling:</label>
+                <div style="display: flex; gap: 10px;">
+                  <button class="a11y-size-btn settings-size-btn active" data-size="1" style="padding: 10px 18px; font-size: 1rem; border: 1px solid var(--border-subtle);">
+                    Normal (100%)
+                  </button>
+                  <button class="a11y-size-btn settings-size-btn" data-size="1.15" style="padding: 10px 18px; font-size: 1.15rem; border: 1px solid var(--border-subtle);">
+                    Large (115%)
+                  </button>
+                  <button class="a11y-size-btn settings-size-btn" data-size="1.3" style="padding: 10px 18px; font-size: 1.3rem; border: 1px solid var(--border-subtle);">
+                    Extra Large (130%)
+                  </button>
+                </div>
+              </div>
+
+              <div style="display: flex; align-items: center; justify-content: space-between; padding-top: 14px; border-top: 1px solid var(--border-subtle);">
+                <div>
+                  <div style="font-weight: 700; font-size: 1.05rem;">High Contrast Mode</div>
+                  <div style="font-size: 0.9rem; color: var(--text-secondary);">Increases borders and pure black/white contrast for easier reading.</div>
+                </div>
+                <input type="checkbox" id="highContrastToggle" style="width: 24px; height: 24px; cursor: pointer;" aria-label="Toggle high contrast mode">
+              </div>
+            </div>
+            <div class="card-footer-note">
+              <span>Settings are automatically remembered.</span>
+            </div>
+          </article>
+
+          <article class="bento-card span-6">
+            <div class="card-header-row">
+              <div class="card-title-group">
+                <span class="card-header-icon" aria-hidden="true">🔊</span>
+                <h3 class="card-title">Audio & Assistance</h3>
+              </div>
+            </div>
+            <div style="display: flex; flex-direction: column; gap: 16px; margin: 12px 0;">
+              <div style="display: flex; align-items: center; justify-content: space-between;">
+                <div>
+                  <div style="font-weight: 700; font-size: 1.05rem;">Chime Sound on Reminders</div>
+                  <div style="font-size: 0.9rem; color: var(--text-secondary);">Play a gentle chime when medication is due.</div>
+                </div>
+                <input type="checkbox" checked style="width: 24px; height: 24px; cursor: pointer;" aria-label="Toggle reminder chime">
+              </div>
+
+              <div style="display: flex; align-items: center; justify-content: space-between; padding-top: 14px; border-top: 1px solid var(--border-subtle);">
+                <div>
+                  <div style="font-weight: 700; font-size: 1.05rem;">Simplified Navigation</div>
+                  <div style="font-size: 0.9rem; color: var(--text-secondary);">Focuses primarily on Today's Overview and Emergency.</div>
+                </div>
+                <input type="checkbox" style="width: 24px; height: 24px; cursor: pointer;" aria-label="Toggle simplified view">
+              </div>
+            </div>
+            <div class="card-footer-note">
+              <span>Adjusted specifically for senior citizens and caregivers.</span>
+            </div>
+          </article>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <!-- ====================================================================
+       MODAL: EMERGENCY ASSISTANCE SIMULATION
+       ==================================================================== -->
+  <div class="modal-overlay" id="emergencyModal" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+    <div class="modal-card">
+      <div class="modal-icon-badge" aria-hidden="true">🚨</div>
+      <h3 class="modal-title" id="modalTitle">Assistance Requested</h3>
+      <p class="modal-body" id="modalBody">
+        Emergency alert simulated! An urgent notification with Meera's location and vitals has been sent to Caregiver <strong>Rahul (Son)</strong>.
+      </p>
+      <div style="background: var(--bg-card-subtle); padding: 12px; border-radius: var(--radius-sm); font-size: 0.9rem; color: var(--text-secondary); width: 100%;">
+        <strong>Research Prototype Note:</strong> In production, this connects to emergency responders and family via telephony API.
+      </div>
+      <button class="modal-close-btn" id="modalCloseBtn">I Understand (Close)</button>
+    </div>
+  </div>
+
+  <!-- Vanilla JavaScript Logic -->
+  <script src="js/script.js"></script>
+</body>
+</html>
